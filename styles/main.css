@@ -1,0 +1,28 @@
+/* The label travels as a CSS custom property so the decoration needs no DOM
+   node of its own: the renderer's own text-decoration support measures the
+   pseudo-element and gives the span its width. */
+.inlay-hints::before,
+.inlay-hints-after::after {
+  content: var(--inlay-hints-text);
+  margin: 0 1px;
+  padding: 0 0.3em;
+  border-radius: 3px;
+  font-size: 0.85em;
+  font-style: normal;
+  font-weight: normal;
+  color: var(--text-color-subtle);
+  background-color: var(--background-color-highlight);
+  white-space: pre;
+}
+
+/* A hint asking for room takes it on the side it was asked for. Each rule
+   names both pseudo-elements because only one of them exists per hint. */
+.inlay-hints-pad-left::before,
+.inlay-hints-pad-left::after {
+  margin-left: 0.4em;
+}
+
+.inlay-hints-pad-right::before,
+.inlay-hints-pad-right::after {
+  margin-right: 0.4em;
+}

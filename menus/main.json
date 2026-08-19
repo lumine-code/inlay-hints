@@ -1,0 +1,16 @@
+{
+  "menu": [
+    {
+      "label": "Packages",
+      "submenu": [
+        {
+          "label": "Inlay Hints",
+          "submenu": [
+            { "label": "Toggle", "command": "inlay-hints:toggle" },
+            { "label": "Refresh", "command": "inlay-hints:refresh" }
+          ]
+        }
+      ]
+    }
+  ]
+}
