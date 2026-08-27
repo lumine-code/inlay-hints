@@ -212,6 +212,17 @@ describe("inlay-hints", () => {
     expect(stateFor().hints.size).toBe(0);
   });
 
+  it("reacts immediately to a scoped-only setting change", async () => {
+    addProvider({ inlayHints: () => [hintAt(0, 11, ": number")] });
+    await microtasks();
+    expect(stateFor().hints.size).toBe(1);
+
+    const rootScope = editor.getRootScopeDescriptor().getScopesArray()[0];
+    lumine.config.set("inlay-hints.enabled", false, { scopeSelector: `.${rootScope}` });
+    await microtasks();
+    expect(stateFor().hints.size).toBe(0);
+  });
+
   describe("the commands", () => {
     it("toggles the global setting and refetches", async () => {
       addProvider({ inlayHints: () => [hintAt(0, 11, ": number")] });
