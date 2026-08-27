@@ -54,6 +54,7 @@
     "enabled": {
       "title": "Enabled",
       "description": "Show inlay hints in the visible part of the editor. Also settable per language in scoped settings.",
+      "scopeResolution": "grammar",
       "type": "boolean",
       "default": true
     },
