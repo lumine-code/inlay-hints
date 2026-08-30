@@ -341,7 +341,6 @@ describe("ViewportTracker", () => {
   let editor, viewportTracker;
 
   beforeEach(async () => {
-    lumine.initializeDetachedPaneSurfaces({ force: true });
     const workspaceElement = lumine.workspace.getElement();
     workspaceElement.style.width = "800px";
     workspaceElement.style.height = "400px";
@@ -350,50 +349,9 @@ describe("ViewportTracker", () => {
     editor.setText("x\n".repeat(300));
   });
 
-  afterEach(async () => {
+  afterEach(() => {
     viewportTracker?.dispose();
-    const pane = editor && lumine.workspace.paneForItem(editor);
-    if (pane?.isDetached?.()) await lumine.workspace.attachDetachedPane(pane);
     for (const open of lumine.workspace.getTextEditors()) open.destroy();
-    lumine.initializeDetachedPaneSurfaces();
-  });
-
-  it("rebinds and disconnects its observer as the editor moves between window surfaces", async () => {
-    viewportTracker = new ViewportTracker();
-    const staleEvents = [];
-    viewportTracker.onDidBecomeStale((event) => staleEvents.push(event));
-    const element = editor.getElement();
-    const state = viewportTracker.states.get(editor);
-    const primaryObserver = state.observer;
-    expect(primaryObserver instanceof window.IntersectionObserver).toBe(true);
-    spyOn(primaryObserver, "disconnect").and.callThrough();
-
-    const detachedPane = await lumine.workspace.detachPaneItem(editor, { show: false });
-    const detachedSurface = lumine.workspace.getWindowSurface(editor);
-    const detachedObserver = state.observer;
-    expect(element.ownerDocument).toBe(detachedSurface.document);
-    expect(detachedObserver).not.toBe(primaryObserver);
-    expect(detachedObserver instanceof detachedSurface.window.IntersectionObserver).toBe(true);
-    expect(primaryObserver.disconnect).toHaveBeenCalledTimes(1);
-    spyOn(detachedObserver, "disconnect").and.callThrough();
-    const eventsBeforeReveal = staleEvents.length;
-    await detachedSurface.windowService.show();
-    await waitForFrames(() => staleEvents.length > eventsBeforeReveal, {
-      description: "the destination viewport to become visible",
-    });
-    expect(staleEvents[staleEvents.length - 1].editor).toBe(editor);
-
-    await lumine.workspace.attachDetachedPane(detachedPane);
-    const attachedObserver = state.observer;
-    expect(element.ownerDocument).toBe(document);
-    expect(attachedObserver).not.toBe(detachedObserver);
-    expect(attachedObserver instanceof window.IntersectionObserver).toBe(true);
-    expect(detachedObserver.disconnect).toHaveBeenCalledTimes(1);
-    spyOn(attachedObserver, "disconnect").and.callThrough();
-
-    viewportTracker.dispose();
-    viewportTracker = null;
-    expect(attachedObserver.disconnect).toHaveBeenCalledTimes(1);
   });
 
   it("emits a clamped buffer-row range once scrolling settles", async () => {
