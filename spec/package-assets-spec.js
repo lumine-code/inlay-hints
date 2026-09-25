@@ -41,12 +41,14 @@ describe("inlay-hints package assets", () => {
     expect(pkg.engines.lumine).toBe("^1.0.0");
   });
 
-  it("consumes inlay-hints.provider and provides nothing", () => {
+  it("consumes inlay-hints.provider and provides background tips", () => {
     const pkg = JSON.parse(read("package.json"));
     expect(pkg.consumedServices["inlay-hints.provider"].versions["^1.0.0"]).toBe(
       "consumeInlayHints",
     );
-    expect(pkg.providedServices).toBeUndefined();
+    expect(pkg.providedServices["background-tips.provider"].versions["1.0.0"]).toBe(
+      "provideBackgroundTips",
+    );
   });
 
   it("keeps a keyword list that never repeats the package name", () => {

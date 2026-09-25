@@ -18,9 +18,6 @@
   "engines": {
     "lumine": "^1.0.0"
   },
-  "backgroundTips": [
-    "{% if keys['inlay-hints:toggle'] %}You can show or hide the inferred-type and parameter-name labels with {{ 'inlay-hints:toggle' | keystroke }}{% else %}Inlay hints show inferred types and parameter names as small labels inside your code, and can be switched off per language in the settings.{% endif %}"
-  ],
   "main": "./lib/main",
   "files": [
     "docs",
@@ -34,6 +31,13 @@
     "lint": "eslint . --max-warnings 0",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
+  },
+  "providedServices": {
+    "background-tips.provider": {
+      "versions": {
+        "1.0.0": "provideBackgroundTips"
+      }
+    }
   },
   "consumedServices": {
     "inlay-hints.provider": {
