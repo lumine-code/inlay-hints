@@ -7,8 +7,8 @@ Hints come from provider packages — typically language-server backends — and
 ## Features
 
 - **Inline labels**: renders each hint as a small label inside the line, so an inferred type or an argument name reads where it belongs.
-- **Viewport-driven**: asks only for the rows on screen, and catches up when scrolling settles or a background editor is revealed.
-- **Label reuse**: reconciles a refetch hint by hint, so labels that survive keep their decoration and the line is never rebuilt.
+- **Viewport-driven**: asks only for the rows on screen, and catches up after scrolling, folding, resizing or revealing a background editor.
+- **Label reuse**: reconciles a refetch hint by hint, so unchanged labels keep their marker and decoration even when edits move their anchor.
 - **Every source at once**: merges the hints of all providers claiming the editor's grammar, and renders a duplicate once.
 - **Per language**: on everywhere by default, and can be switched off for one language and not the rest through scoped settings.
 - **Truncation**: cuts a long label with an ellipsis at a length you choose, so a wide generic type cannot push the code off screen.
@@ -39,6 +39,7 @@ The labels can be adjusted in the `styles.css` file, e.g. draw them without a ba
 ## Services
 
 - [`inlay-hints.provider`](docs/inlay-hints.provider.md): consumed to collect the labels rendered inside the code, from providers such as IDE backend packages.
+- `background-tips.provider`: provided to explain inline labels and per-language settings on the empty workspace.
 
 ## Contributing
 

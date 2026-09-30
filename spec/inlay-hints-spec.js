@@ -1,7 +1,6 @@
 const os = require("os");
 const path = require("path");
 const { CompositeDisposable, Emitter } = require("lumine");
-const ViewportTracker = require("../lib/viewport-tracker");
 
 const packageRoot = path.join(__dirname, "..");
 
@@ -86,7 +85,7 @@ describe("inlay-hints", () => {
     await microtasks();
     const span = editor.getElement().querySelector(".line .inlay-hints-after");
     expect(span).not.toBeNull();
-    expect(span.style.getPropertyValue("--inlay-hints-text")).toBe('" -> int"');
+    expect(span.style.getPropertyValue("--inlay-hints-after-text")).toBe('" -> int"');
     expect(entries()[0].marker.getBufferRange().toString()).toBe("[(2, 9) - (2, 10)]");
   });
 
@@ -258,6 +257,37 @@ describe("inlay-hints", () => {
       await microtasks();
       expect(calls.length).toBe(before + 1);
     });
+
+    it("refreshes the editor that dispatched the command", async () => {
+      const calls = [];
+      addProvider({
+        inlayHints: (target) => {
+          calls.push(target);
+          return [];
+        },
+      });
+      await lumine.workspace.open(path.join(os.tmpdir(), "inlay-hints-other.js"));
+      await microtasks();
+      calls.length = 0;
+      lumine.commands.dispatch(editor.getElement(), "inlay-hints:refresh");
+      await microtasks();
+      expect(calls).toEqual([editor]);
+    });
+
+    it("explains why a disabled editor cannot be refreshed", () => {
+      lumine.config.set("inlay-hints.enabled", false);
+      lumine.commands.dispatch(lumine.workspace.getElement(), "inlay-hints:refresh");
+      const [notification] = lumine.notifications.getNotifications();
+      expect(notification.getType()).toBe("warning");
+      expect(notification.getMessage()).toContain("disabled for this language");
+    });
+
+    it("explains why a file without a provider cannot be refreshed", () => {
+      lumine.commands.dispatch(lumine.workspace.getElement(), "inlay-hints:refresh");
+      const [notification] = lumine.notifications.getNotifications();
+      expect(notification.getType()).toBe("warning");
+      expect(notification.getMessage()).toContain("No inlay hints provider");
+    });
   });
 
   // The renderer resolves a point on a label to the column the label decorates
@@ -338,9 +368,10 @@ describe("inlay-hints", () => {
 });
 
 describe("ViewportTracker", () => {
-  let editor, viewportTracker;
+  let editor, viewportTracker, ViewportTracker;
 
   beforeEach(async () => {
+    ViewportTracker = require("../lib/viewport-tracker");
     const workspaceElement = lumine.workspace.getElement();
     workspaceElement.style.width = "800px";
     workspaceElement.style.height = "400px";

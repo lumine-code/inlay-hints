@@ -3,7 +3,6 @@
    pseudo-element and gives the span its width. */
 .inlay-hints::before,
 .inlay-hints-after::after {
-  content: var(--inlay-hints-text);
   margin: 0 1px;
   padding: 0 0.3em;
   border-radius: 3px;
@@ -15,14 +14,22 @@
   white-space: pre;
 }
 
+.inlay-hints::before {
+  content: var(--inlay-hints-text);
+}
+
+.inlay-hints-after::after {
+  content: var(--inlay-hints-after-text);
+}
+
 /* A hint asking for room takes it on the side it was asked for. Each rule
    names both pseudo-elements because only one of them exists per hint. */
 .inlay-hints-pad-left::before,
-.inlay-hints-pad-left::after {
+.inlay-hints-after-pad-left::after {
   margin-left: 0.4em;
 }
 
 .inlay-hints-pad-right::before,
-.inlay-hints-pad-right::after {
+.inlay-hints-after-pad-right::after {
   margin-right: 0.4em;
 }

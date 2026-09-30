@@ -62,7 +62,7 @@ Optional members:
 
 `position` is a **buffer** position, and the label is drawn immediately before the character there. A column past the end of its line anchors the label after the line's last character instead. A hint on an empty line is dropped: a label needs a character to hang from.
 
-`label` is the finished text, however your source spells it — the `: number` of an inferred type, the `count:` of a named argument. It is truncated for display when it runs past the `inlay-hints.maxLabelLength` setting, so return the whole thing and let the setting decide. An empty label drops the hint.
+`label` is the finished text, however your source spells it — the `: number` of an inferred type, the `count:` of a named argument. It is truncated for display when it runs past the `inlay-hints.maxLabelLength` setting, counted in Unicode code points, so return the whole thing and let the setting decide. An empty label drops the hint.
 
 `paddingLeft` and `paddingRight` ask for a space's worth of room on that side, for a label that would otherwise read as part of the code beside it.
 
@@ -110,7 +110,9 @@ module.exports = {
 
 Every provider serving the editor's grammar is asked with the same range, and all of their hints are shown together. Two providers returning the identical hint — same position, same label, same padding — render it once, and the higher-priority provider owns it. Priority breaks a tie; it does not silence anyone.
 
-Hints are fetched for the visible rows when an editor is opened or revealed, when scrolling settles, and when the buffer stops changing. Between fetches they ride anchored markers, so they keep pace with edits around them.
+Distinct labels at one anchor share a decoration and appear in provider-priority order, then in the order returned by that provider. Padding between them inserts a space; padding outside the group remains on the requested side. A label before the last character and a label after the line keep their own text and padding.
+
+Hints are fetched for the visible rows when an editor is opened or revealed, when scrolling settles, when folding or resizing changes the visible rows, and when the buffer stops changing. Between fetches they ride anchored markers, so they keep pace with edits around them. An edit immediately invalidates pending responses for the old text; a touched marker is replaced on the next successful fetch.
 
 A refetch reconciles in place. A hint that reappears unchanged keeps its marker and its decoration untouched, which is what lets the renderer skip rebuilding that line at all. Return your hints the same way each time and a steady file costs nothing to redraw.
 
