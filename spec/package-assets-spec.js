@@ -5,11 +5,11 @@ const root = path.join(__dirname, "..");
 const read = (rel) => fs.readFileSync(path.join(root, rel), "utf8");
 const exists = (rel) => fs.existsSync(path.join(root, rel));
 
-// This package was extracted from ide-client, which used to render inlay hints
+// This package was extracted from ide, which used to render inlay hints
 // itself against its own sessions. The rendering is here now and reaches its
 // hints only through the `inlay-hints.provider` service, so the guards below
 // are mostly about that boundary: no protocol vocabulary, and no config or
-// class name left in the ide-client namespace.
+// class name left in the ide namespace.
 describe("inlay-hints package assets", () => {
   it("ships plain CommonJS with no build step", () => {
     expect(exists("lib/main.js")).toBe(true);
@@ -24,7 +24,7 @@ describe("inlay-hints package assets", () => {
     const css = read("styles/main.css");
     expect(css).toContain(".inlay-hints");
     expect(css).toContain("var(--");
-    expect(css).not.toContain("ide-client");
+    expect(css).not.toMatch(/\bide\b/);
     expect(css).not.toContain("@import");
     expect(css).not.toMatch(/\bfade\(|\bcontrast\(|\blighten\(|\bdarken\(|@[a-z-]+:/);
   });
@@ -113,7 +113,7 @@ describe("inlay-hints package assets", () => {
       const src = read(path.join("lib", file));
       expect(src.toLowerCase()).not.toContain("pulsar");
       expect(src).not.toContain("textDocument/");
-      expect(src).not.toContain("ide-client");
+      expect(src).not.toMatch(/\bide\b/);
     }
   });
 });

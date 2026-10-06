@@ -9,7 +9,7 @@ Supplies the labels rendered inline between the characters they annotate.
 | Consumed by | `consumeInlayHints(provider)` returning a `Disposable`      |
 | Owner       | [`inlay-hints`](https://github.com/lumine-code/inlay-hints) |
 
-If your hints come from a language server, register an adapter with `ide-client` instead — it already provides this service on every adapter's behalf. Implement this directly only for a source that is not LSP: a type inferencer of your own, a profiler annotating call sites, a spreadsheet of measured values.
+If your hints come from a language server, register an adapter with `ide` instead — it already provides this service on every adapter's behalf. Implement this directly only for a source that is not LSP: a type inferencer of your own, a profiler annotating call sites, a spreadsheet of measured values.
 
 ## Registration
 
@@ -54,11 +54,11 @@ Required members:
 
 Optional members:
 
-| Member                      | Description                                                                                      |
-| --------------------------- | ------------------------------------------------------------------------------------------------ |
-| `onDidInvalidate(callback)` | Announce that your hints went stale. Pass `{editor}` to refetch one, nothing to refetch all.     |
-| `grammarScopes`             | Scope names you serve. **Omitting it means every grammar.** May be a getter — see Behavior.      |
-| `priority`                  | Decides who wins when two providers offer the same hint. Defaults to `0`; `ide-client` uses `2`. |
+| Member                      | Description                                                                                  |
+| --------------------------- | -------------------------------------------------------------------------------------------- |
+| `onDidInvalidate(callback)` | Announce that your hints went stale. Pass `{editor}` to refetch one, nothing to refetch all. |
+| `grammarScopes`             | Scope names you serve. **Omitting it means every grammar.** May be a getter — see Behavior.  |
+| `priority`                  | Decides who wins when two providers offer the same hint. Defaults to `0`; `ide` uses `2`.    |
 
 `position` is a **buffer** position, and the label is drawn immediately before the character there. A column past the end of its line anchors the label after the line's last character instead. A hint on an empty line is dropped: a label needs a character to hang from.
 
