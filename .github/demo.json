@@ -1,0 +1,17 @@
+{
+  "title": "inlay-hints",
+  "description": "Show inferred variable types inline in a TypeScript file.",
+  "recordedOn": "2026-10-13",
+  "sourceRevision": "85bd8d22f0f9c99db598bb198df5c7ff9dc19cd2",
+  "mode": "normal",
+  "fontSettings": "default",
+  "themeSourceRevision": "6564a9e21899b5541e9c8f8006f9be6d6d72e6ad",
+  "images": [
+    {
+      "file": "demo.png",
+      "label": "Show inferred variable types inline in a TypeScript file.",
+      "width": 1150,
+      "height": 600
+    }
+  ]
+}

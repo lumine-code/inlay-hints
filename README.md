@@ -13,6 +13,8 @@ Hints come from provider packages — typically language-server backends — and
 - **Per language**: on everywhere by default, and can be switched off for one language and not the rest through scoped settings.
 - **Truncation**: cuts a long label with an ellipsis at a length you choose, so a wide generic type cannot push the code off screen.
 
+![Show inferred variable types inline in a TypeScript file.](.github/demo.png)
+
 ## Installation
 
 To install `inlay-hints` search for it in the Install pane of the Lumine settings, or run the command `lumine --install lumine-code/inlay-hints`.
