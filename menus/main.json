@@ -8,7 +8,9 @@
           "submenu": [
             {
               "label": "Inlay Hints",
-              "command": "inlay-hints:toggle"
+              "command": "inlay-hints:toggle",
+              "group": "intelligence",
+              "order": 20
             }
           ]
         }
