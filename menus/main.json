@@ -1,6 +1,20 @@
 {
   "menu": [
     {
+      "label": "View",
+      "submenu": [
+        {
+          "label": "Editor",
+          "submenu": [
+            {
+              "label": "Inlay Hints",
+              "command": "inlay-hints:toggle"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "label": "Packages",
       "submenu": [
         {
