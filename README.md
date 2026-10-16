@@ -24,7 +24,10 @@ To install `inlay-hints` search for it in the Install pane of the Lumine setting
 Commands available in `lumine-workspace`:
 
 - `inlay-hints:toggle`: show or hide the inline type and parameter-name labels,
-- `inlay-hints:refresh`: ask the providers for the active file's hints again.
+
+Commands available in `lumine-text-editor:not([mini])`:
+
+- `inlay-hints:refresh`: ask the providers for this editor's hints again.
 
 ## Customization
 

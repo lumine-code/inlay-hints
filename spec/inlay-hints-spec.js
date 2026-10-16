@@ -253,7 +253,7 @@ describe("inlay-hints", () => {
       });
       await microtasks();
       const before = calls.length;
-      lumine.commands.dispatch(lumine.workspace.getElement(), "inlay-hints:refresh");
+      lumine.commands.dispatch(editor.getElement(), "inlay-hints:refresh");
       await microtasks();
       expect(calls.length).toBe(before + 1);
     });
@@ -276,14 +276,14 @@ describe("inlay-hints", () => {
 
     it("explains why a disabled editor cannot be refreshed", () => {
       lumine.config.set("inlay-hints.enabled", false);
-      lumine.commands.dispatch(lumine.workspace.getElement(), "inlay-hints:refresh");
+      lumine.commands.dispatch(editor.getElement(), "inlay-hints:refresh");
       const [notification] = lumine.notifications.getNotifications();
       expect(notification.getType()).toBe("warning");
       expect(notification.getMessage()).toContain("disabled for this language");
     });
 
     it("explains why a file without a provider cannot be refreshed", () => {
-      lumine.commands.dispatch(lumine.workspace.getElement(), "inlay-hints:refresh");
+      lumine.commands.dispatch(editor.getElement(), "inlay-hints:refresh");
       const [notification] = lumine.notifications.getNotifications();
       expect(notification.getType()).toBe("warning");
       expect(notification.getMessage()).toContain("No inlay hints provider");
