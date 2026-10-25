@@ -21,6 +21,11 @@ function textForContent(content) {
 }
 
 describe("inlay-hints reconciliation", () => {
+  // Analysis fixtures use a real grammar; None deliberately disables this package.
+  beforeEach(async () => {
+    await lumine.packages.activatePackage("language-text");
+  });
+
   let editor, mainModule, manager, disposables;
 
   const stateFor = () => manager.states.get(editor);

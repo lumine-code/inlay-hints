@@ -17,6 +17,11 @@ const hintAt = (row, column, label, extra = {}) => ({
 });
 
 describe("inlay-hints", () => {
+  // Analysis fixtures use a real grammar; None deliberately disables this package.
+  beforeEach(async () => {
+    await lumine.packages.activatePackage("language-text");
+  });
+
   let mainModule, manager, editor, disposables;
 
   const stateFor = () => manager.states.get(editor);
@@ -65,6 +70,24 @@ describe("inlay-hints", () => {
     disposables.add(mainModule.consumeInlayHints(provider));
     return provider;
   }
+
+  it("clears hints and suspends providers for None until a grammar is selected", async () => {
+    const grammar = editor.getGrammar();
+    const inlayHints = jasmine.createSpy("hints").and.returnValue([hintAt(0, 11, ": number")]);
+    addProvider({ inlayHints });
+    await microtasks();
+    expect(entries().length).toBe(1);
+    const calls = inlayHints.calls.count();
+    editor.setGrammar(lumine.grammars.nullGrammar);
+    expect(lumine.commands.canDispatch(editor.getElement(), "inlay-hints:refresh")).toBeFalse();
+    await manager.fetch(stateFor(), wholeBuffer());
+    expect(entries()).toEqual([]);
+    expect(inlayHints.calls.count()).toBe(calls);
+    editor.setGrammar(grammar);
+    await microtasks();
+    expect(inlayHints.calls.count()).toBeGreaterThan(calls);
+    expect(entries().length).toBe(1);
+  });
 
   it("renders labels through the CSS custom property, skipping empty lines", async () => {
     addProvider({
@@ -371,6 +394,8 @@ describe("ViewportTracker", () => {
   let editor, viewportTracker, ViewportTracker;
 
   beforeEach(async () => {
+    const textGrammarPackage = await lumine.packages.activatePackage("language-text");
+    await textGrammarPackage.resourceLoadPromise;
     ViewportTracker = require("../lib/viewport-tracker");
     const workspaceElement = lumine.workspace.getElement();
     workspaceElement.style.width = "800px";

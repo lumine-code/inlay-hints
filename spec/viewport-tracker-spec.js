@@ -2,6 +2,11 @@ const os = require("node:os");
 const path = require("node:path");
 
 describe("ViewportTracker layout changes", () => {
+  // Analysis fixtures use a real grammar; None deliberately disables this package.
+  beforeEach(async () => {
+    await lumine.packages.activatePackage("language-text");
+  });
+
   let editor, tracker, events, intersections, resizes, styles;
 
   beforeEach(async () => {
