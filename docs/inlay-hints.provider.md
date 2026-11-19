@@ -32,6 +32,7 @@ type InlayHintsProvider = {
   inlayHints(
     editor: TextEditor,
     range: [number, number],
+    options?: { signal: AbortSignal },
   ): Promise<InlayHint[] | null> | InlayHint[] | null;
   onDidInvalidate?(callback: (event: { editor?: TextEditor }) => void): Disposable;
   grammarScopes?: string[] | Set<string>;
@@ -65,6 +66,8 @@ Optional members:
 `label` is the finished text, however your source spells it — the `: number` of an inferred type, the `count:` of a named argument. It is truncated for display when it runs past the `inlay-hints.maxLabelLength` setting, counted in Unicode code points, so return the whole thing and let the setting decide. An empty label drops the hint.
 
 `paddingLeft` and `paddingRight` ask for a space's worth of room on that side, for a label that would otherwise read as part of the code beside it.
+
+The consumer aborts the request signal when the editor changes or a newer viewport request takes over. Providers may forward it to their backend.
 
 ## Range
 
